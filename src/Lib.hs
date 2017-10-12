@@ -4,7 +4,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Lib where
+module Lib ( startApp ) where
 
 import Data.Aeson
 import Data.Aeson.TH
@@ -27,8 +27,8 @@ import Debug.Trace
 import Data.String
 import Safe as X (headMay, headNote, initMay,tailMay)
 import UrlEncodeHelpers
-import MathExpressions
-import MathParser
+import MixedExpressions
+import MixedParser
 import Text.Parsec
 import Data.Either
 
@@ -47,16 +47,22 @@ instance IsString a => FromForm (ZingTreeVars a) where
         vars = withoutKeys ["session_id", "agent_name", "message"] form
 
 type MathAPI = "calculate" :>
-  ReqBody '[FormUrlEncoded] (ZingTreeVars (Either ParseError Equalities)) :>
-  Post '[JSON] (Map T.Text Double)
+  ReqBody '[FormUrlEncoded] (ZingTreeVars (Either ParseError MixedEqualities)) :>
+  Post '[JSON] (Map T.Text Val)
 
 type API = MathAPI
 
 fromRight (Right a) = a
 fromLeft (Left a) = a
 
-calculateEndpoint :: ZingTreeVars (Either ParseError Equalities) -> Either ParseError Equalities -> Handler (Map T.Text Double)
-calculateEndpoint ztv m = if isRight m then maybe varErr return (runMath (vars ztv) (fromRight m))
+boolToString (BoolVal True) = StringVal "True"
+boolToString (BoolVal False) = StringVal "False"
+boolToString v = v
+
+calculateEndpoint :: ZingTreeVars (Either ParseError MixedEqualities) ->
+  Either ParseError MixedEqualities ->
+  Handler (Map T.Text Val)
+calculateEndpoint ztv m = if isRight m then maybe varErr return (Map.map boolToString <$> runMixedExpressions (vars ztv) (fromRight m))
   else traceShow (fromLeft m) parseErr where
     parseErr = throwError err404 {errBody = "Malformed message expression"}
     varErr = throwError err404 {errBody = "Unrecognized variable name"}
@@ -67,7 +73,10 @@ runMessageEndpoint f v = maybe err (f v) m where
   err = throwError err404 {errBody = "This endpoint requires a message"}
 
 server :: Server API
-server a = traceShow a $ runMessageEndpoint calculateEndpoint a
+server a = do
+  result <- traceShow a (runMessageEndpoint calculateEndpoint a)
+  let json = encode $ toJSON result
+  return $ traceShow json result
 
 app :: Application
 app = serve api server
@@ -75,7 +84,7 @@ app = serve api server
 api :: Proxy API
 api = Proxy
 
-startApp :: IO ()
-startApp = withStdoutLogger $ \aplogger -> do
-        let settings = setPort 8080 $ setLogger aplogger defaultSettings
+startApp :: Int -> IO ()
+startApp port = withStdoutLogger $ \aplogger -> do
+        let settings = setPort port $ setLogger aplogger defaultSettings
         runSettings settings app
