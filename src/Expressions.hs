@@ -11,6 +11,7 @@ import Data.Maybe
 import Data.Semigroup
 import Data.Either
 import Control.Monad
+import Safe
 
 newtype Var = Var T.Text deriving Show
 
@@ -62,6 +63,12 @@ makeExpConcrete vars (SValExpression val) = Just $ CValExpression val
 makeExpConcrete vars (VarExpression (Var var)) = result where
   val = join $ M.lookup var vars
   result = CValExpression <$> val
+
+readEitherVal :: (String -> Maybe m) -> (String -> Maybe m) -> String -> Maybe m
+readEitherVal fa fb s = result where
+  l = fa s
+  r = fb s
+  result = headMay $ catMaybes [l, r]
 
 data ExpressionLang b u v = ExpressionLang {
   binaryEvaluator :: b -> v -> v -> v,

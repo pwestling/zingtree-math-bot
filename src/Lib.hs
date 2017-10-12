@@ -4,7 +4,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Lib ( startApp ) where
+module Lib ( startApp, app ) where
 
 import Data.Aeson
 import Data.Aeson.TH

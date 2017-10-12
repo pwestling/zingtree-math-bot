@@ -23,11 +23,11 @@ mixedExpressionLang = ExpressionLang {
   readVal = readMixedVal
 }
 
+readBoolOrNum :: String -> Maybe Val
+readBoolOrNum = readEitherVal (fmap BoolVal . readMay) (fmap NumVal . readMay)
+
 readMixedVal :: String -> Maybe Val
-readMixedVal s = result where
-  bool = BoolVal <$> (readMay s :: Maybe Bool)
-  num = NumVal <$> (readMay s :: Maybe Double)
-  result = headMay $ catMaybes [num, bool, Just (StringVal s)]
+readMixedVal = readEitherVal readBoolOrNum (Just . StringVal)
 
 instance ToJSON Val where
   toJSON (NumVal d) = toJSON d
