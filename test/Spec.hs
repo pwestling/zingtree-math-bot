@@ -10,6 +10,8 @@ import Network.HTTP.Types.Header
 import Network.HTTP.Types.Method
 import Network.HTTP.Base
 import Data.String
+import Data.Aeson
+import Data.ByteString.Lazy.Char8
 
 main :: IO ()
 main = hspec spec
@@ -20,7 +22,7 @@ spec :: Spec
 spec = with (return app) $
     describe "POST /calculate" $
         it "responds with 200" $ do
-            let equation = urlEncode "result=(f > g) && 10 * 3 > 5 and k - 4 == 0; result2 = f - g * k"
+            let equation = urlEncode "result=(f > g) && 10 * 3 > 5 and k - 4 == 0; z=k; result2 = f - g * z"
             let postdata = fromString $ "message=" ++ equation ++ "&f=3&g=2&k=4"
-            let result = "{\"result\":\"True\",\"result2\":-5}"
+            let result =  "{\"result\":\"True\",\"result2\":-5,\"z\":4}"
             postFormUrl "/calculate" postdata `shouldRespondWith` result
