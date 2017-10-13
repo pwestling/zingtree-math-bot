@@ -1,17 +1,17 @@
-{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TupleSections         #-}
 
 module Expressions where
 
-import qualified Data.Text as T
-import qualified Data.Map as M
-import qualified Safe as S
-import Text.Read
-import Data.Maybe
-import Data.Semigroup
-import Data.Either
-import Control.Monad
-import Safe
+import           Control.Monad
+import           Data.Either
+import qualified Data.Map       as M
+import           Data.Maybe
+import           Data.Semigroup
+import qualified Data.Text      as T
+import           Safe
+import qualified Safe           as S
+import           Text.Read
 
 newtype Var = Var T.Text deriving Show
 
@@ -84,6 +84,6 @@ readEitherVal fa fb s = result where
 
 data ExpressionLang b u v = ExpressionLang {
   binaryEvaluator :: b -> v -> v -> v,
-  unaryEvaluator :: u -> v -> v,
-  readVal :: String -> Maybe v
+  unaryEvaluator  :: u -> v -> v,
+  readVal         :: String -> Maybe v
 }

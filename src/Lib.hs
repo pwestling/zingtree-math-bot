@@ -1,42 +1,43 @@
-{-# LANGUAGE DataKinds       #-}
-{-# LANGUAGE TypeOperators   #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DataKinds           #-}
+{-# LANGUAGE DeriveGeneric       #-}
+{-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeOperators       #-}
 
 module Lib ( startApp, app ) where
 
-import Data.Aeson
-import Data.Aeson.TH
-import Data.Text as T (Text, unpack)
-import Control.Applicative
-import Network.Wai.Handler.Warp
-import Network.Wai.Logger
-import Servant
-import Web.FormUrlEncoded
-import Data.Map as Map
-import qualified Data.HashMap.Strict as HM
-import qualified Data.ByteString.Lazy as L
+import           Control.Applicative
+import           Control.Monad
+import           Data.Aeson
+import           Data.Aeson.TH
+import qualified Data.ByteString.Char8      as I
+import qualified Data.ByteString.Lazy       as L
 import qualified Data.ByteString.Lazy.Char8 as LC
-import qualified Data.ByteString.Char8 as I
-import GHC.Generics
-import Network.Wai
-import Control.Monad
-import Data.Maybe
-import Debug.Trace
-import Data.String
-import Safe as X (headMay, headNote, initMay,tailMay)
-import UrlEncodeHelpers
-import MixedExpressions
-import MixedParser
-import Text.Parsec
-import Data.Either
+import           Data.Either
+import qualified Data.HashMap.Strict        as HM
+import           Data.Map                   as Map
+import           Data.Maybe
+import           Data.String
+import           Data.Text                  as T (Text, unpack)
+import           Debug.Trace
+import           GHC.Generics
+import           MixedExpressions
+import           MixedParser
+import           Network.Wai
+import           Network.Wai.Handler.Warp
+import           Network.Wai.Logger
+import           Safe                       as X (headMay, headNote, initMay,
+                                                  tailMay)
+import           Servant
+import           Text.Parsec
+import           UrlEncodeHelpers
+import           Web.FormUrlEncoded
 
 data ZingTreeVars a = ZingTreeVars{
-  message :: Maybe a,
+  message   :: Maybe a,
   sessionId :: Maybe Text,
   agentName :: Maybe Text,
-  vars :: Map Text [Text]
+  vars      :: Map Text [Text]
 } deriving (Show, Generic)
 
 instance IsString a => FromForm (ZingTreeVars a) where
@@ -55,9 +56,9 @@ type API = MathAPI
 fromRight (Right a) = a
 fromLeft (Left a) = a
 
-boolToString (BoolVal True) = StringVal "True"
+boolToString (BoolVal True)  = StringVal "True"
 boolToString (BoolVal False) = StringVal "False"
-boolToString v = v
+boolToString v               = v
 
 calculateEndpoint :: ZingTreeVars (Either ParseError MixedEqualities) ->
   Either ParseError MixedEqualities ->

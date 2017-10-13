@@ -2,10 +2,10 @@
 
 module LogicParser where
 
-import LogicExpressions
-import ExpressionParser
-import Text.Parsec
-import Data.String
+import           Data.String
+import           ExpressionParser
+import           LogicExpressions
+import           Text.Parsec
 
 instance IsString (Either ParseError LogicEqualities) where
   fromString = runParser (equalitiesParser logicParseTable) () ""

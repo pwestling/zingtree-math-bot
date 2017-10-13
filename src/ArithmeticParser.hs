@@ -2,10 +2,10 @@
 
 module ArithmeticParser where
 
-import ArithmeticExpressions
-import ExpressionParser
-import Text.Parsec
-import Data.String
+import           ArithmeticExpressions
+import           Data.String
+import           ExpressionParser
+import           Text.Parsec
 
 instance IsString (Either ParseError MathEqualities) where
   fromString = runParser (equalitiesParser arithmeticParseTable) () ""

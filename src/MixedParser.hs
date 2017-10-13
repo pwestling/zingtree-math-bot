@@ -2,12 +2,12 @@
 
 module MixedParser where
 
-import MixedExpressions as ME
-import ExpressionParser
-import Text.Parsec
-import Data.String
 import qualified ArithmeticParser as AP
-import qualified LogicParser as LP
+import           Data.String
+import           ExpressionParser
+import qualified LogicParser      as LP
+import           MixedExpressions as ME
+import           Text.Parsec
 
 type MixedParser a = SEParser BinOp UnOp Val a
 

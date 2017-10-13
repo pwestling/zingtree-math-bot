@@ -1,10 +1,10 @@
 module ExpressionParser where
 
-import Text.Parsec
-import Expressions
-import qualified Data.Text as T
-import Data.String
-import Data.Either
+import           Data.Either
+import           Data.String
+import qualified Data.Text   as T
+import           Expressions
+import           Text.Parsec
 
 type SEParser b u v a = Parsec String () a
 
@@ -12,8 +12,8 @@ equalitiesParser :: ParserTable b u v -> SEParser b u v (Equalities b u v)
 equalitiesParser tab = Equalities <$> equality tab `sepBy1` char ';'
 
 data ParserTable b u v = ParserTable {
-  valParser :: Parsec String () v,
-  unaryOpParsers :: Parsec String () u,
+  valParser                   :: Parsec String () v,
+  unaryOpParsers              :: Parsec String () u,
   binaryOpParsersByPrecedence :: [Parsec String () b]
 }
 

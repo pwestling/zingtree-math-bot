@@ -1,9 +1,9 @@
 module UrlEncodeHelpers where
 import qualified Data.HashMap.Strict as HM
-import Web.FormUrlEncoded
-import qualified Data.Text as T
-import Safe
-import qualified Data.Map as M
+import qualified Data.Map            as M
+import qualified Data.Text           as T
+import           Safe
+import           Web.FormUrlEncoded
 
 getSingleValParam :: T.Text -> Form -> Maybe T.Text
 getSingleValParam key form = result where

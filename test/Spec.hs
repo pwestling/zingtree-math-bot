@@ -1,17 +1,17 @@
-{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes       #-}
 module Main (main) where
 
-import Lib (app)
-import Test.Hspec
-import Test.Hspec.Wai
-import Test.Hspec.Wai.JSON
-import Network.HTTP.Types.Header
-import Network.HTTP.Types.Method
-import Network.HTTP.Base
-import Data.String
-import Data.Aeson
-import Data.ByteString.Lazy.Char8
+import           Data.Aeson
+import           Data.ByteString.Lazy.Char8
+import           Data.String
+import           Lib                        (app)
+import           Network.HTTP.Base
+import           Network.HTTP.Types.Header
+import           Network.HTTP.Types.Method
+import           Test.Hspec
+import           Test.Hspec.Wai
+import           Test.Hspec.Wai.JSON
 
 main :: IO ()
 main = hspec spec

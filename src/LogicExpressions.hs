@@ -1,7 +1,7 @@
 module LogicExpressions where
 
-import Expressions
-import Text.Read
+import           Expressions
+import           Text.Read
 
 
 data LogicBinOp = And | Or deriving Show
@@ -24,4 +24,4 @@ runLUnOp Not = not
 
 runLBinOp :: LogicBinOp -> Bool -> Bool -> Bool
 runLBinOp And = (&&)
-runLBinOp Or = (||)
+runLBinOp Or  = (||)
