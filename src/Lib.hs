@@ -10,15 +10,13 @@ import           Control.Applicative
 import           Control.Monad
 import           Data.Aeson
 import           Data.Aeson.TH
-import qualified Data.ByteString.Char8      as I
-import qualified Data.ByteString.Lazy       as L
-import qualified Data.ByteString.Lazy.Char8 as LC
 import           Data.Either
-import qualified Data.HashMap.Strict        as HM
-import           Data.Map                   as Map
+import qualified Data.HashMap.Strict      as HM
+import           Data.Map                 as Map
 import           Data.Maybe
 import           Data.String
-import           Data.Text                  as T (Text, unpack)
+import           Data.String.Conversions
+import           Data.Text                as T (Text)
 import           Debug.Trace
 import           GHC.Generics
 import           MixedExpressions
@@ -26,8 +24,8 @@ import           MixedParser
 import           Network.Wai
 import           Network.Wai.Handler.Warp
 import           Network.Wai.Logger
-import           Safe                       as X (headMay, headNote, initMay,
-                                                  tailMay)
+import           Safe                     as X (headMay, headNote, initMay,
+                                                tailMay)
 import           Servant
 import           Text.Parsec
 import           UrlEncodeHelpers
@@ -44,7 +42,7 @@ instance IsString a => FromForm (ZingTreeVars a) where
   fromForm form = traceShow form $ Right ZingTreeVars {message = message, sessionId = sess, agentName = agent, vars = vars} where
         sess = getSingleValParam "session_id" form
         agent = getSingleValParam "agent_name" form
-        message = (fromString . T.unpack) <$> getSingleValParam "message" form
+        message = fromString . convertString <$> getSingleValParam "message" form
         vars = withoutKeys ["session_id", "agent_name", "message"] form
 
 type MathAPI = "calculate" :>

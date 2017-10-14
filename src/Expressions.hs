@@ -5,12 +5,13 @@ module Expressions where
 
 import           Control.Monad
 import           Data.Either
-import qualified Data.Map       as M
+import qualified Data.Map                as M
 import           Data.Maybe
 import           Data.Semigroup
-import qualified Data.Text      as T
+import           Data.String.Conversions
+import qualified Data.Text               as T
 import           Safe
-import qualified Safe           as S
+import qualified Safe                    as S
 import           Text.Read
 
 newtype Var = Var T.Text deriving Show
@@ -32,7 +33,7 @@ data Equality b u v = Equality Var (SymbolicExpression b u v) deriving Show
 newtype Equalities b u v = Equalities [Equality b u v] deriving Show
 
 parseVars :: (String -> Maybe v) -> M.Map T.Text [T.Text] -> M.Map T.Text (Maybe v)
-parseVars parser = M.map (\s -> parser =<< T.unpack <$> S.headMay s)
+parseVars parser = M.map (\s -> parser =<< convertString <$> S.headMay s)
 
 runExpressions ::
   ExpressionLang b u v ->

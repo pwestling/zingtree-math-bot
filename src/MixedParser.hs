@@ -9,6 +9,8 @@ import qualified LogicParser      as LP
 import           MixedExpressions as ME
 import           Text.Parsec
 
+{-# ANN compareOps "HLint: ignore Redundant lambda" #-}
+
 type MixedParser a = SEParser BinOp UnOp Val a
 
 instance IsString (Either ParseError MixedEqualities) where

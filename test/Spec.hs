@@ -1,11 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes       #-}
+
 module Main (main) where
 
 import           Data.Aeson
-import           Data.ByteString.Lazy.Char8
 import           Data.String
-import           Lib                        (app)
+import           Lib                       (app)
 import           Network.HTTP.Base
 import           Network.HTTP.Types.Header
 import           Network.HTTP.Types.Method

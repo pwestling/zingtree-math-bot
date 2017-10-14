@@ -2,7 +2,8 @@ module ExpressionParser where
 
 import           Data.Either
 import           Data.String
-import qualified Data.Text   as T
+import           Data.String.Conversions
+import qualified Data.Text               as T
 import           Expressions
 import           Text.Parsec
 
@@ -31,7 +32,7 @@ equality tab = do
 validName = many1 (letter <|> digit <|> oneOf "_-")
 
 var :: SEParser b u v Var
-var = Var . T.pack <$> validName
+var = Var . convertString <$> validName
 
 varExp = VarExpression <$> (var <* spaces)
 
